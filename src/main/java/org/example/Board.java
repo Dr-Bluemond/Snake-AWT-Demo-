@@ -1,8 +1,10 @@
 package org.example;
 
+import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 
-public class Board extends Canvas {
+public class Board extends Container {
     enum Cell {
         CELL_HEAD,
         CELL_BODY,
@@ -13,17 +15,34 @@ public class Board extends Canvas {
 
     int rowc;
     int colc;
+
+    int cellSize;
+
+    int width;
+    int height;
+
+    BufferedImage bufImg;
     Cell[][] data; // each cell's size is 40*40
 
     boolean dead;
+    Label deadLabel;
 
 
-    public Board(int rowc, int colc) {
+    public Board(int rowc, int colc, int cellSize) {
         this.rowc = rowc;
         this.colc = colc;
+        this.cellSize = cellSize;
+        width = colc * cellSize;
+        height = rowc * cellSize;
+        bufImg = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
         this.dead = false;
         data = new Cell[rowc][colc];
+        setPreferredSize(new Dimension(width, height));
         clear();
+        this.setLayout(new BorderLayout());
+        deadLabel = new Label("You are dead! Press R to restart.");
+        deadLabel.setFont(new Font("Arial", Font.BOLD, 20));
+        this.add(deadLabel, BorderLayout.NORTH);
     }
 
     void clear() {
@@ -34,15 +53,17 @@ public class Board extends Canvas {
         }
     }
 
-    @Override
-    public void paint(Graphics g) {
-        super.paint(g);
-        var g2 = (Graphics2D) g;
+    private void paintComponent(Graphics g) {
+        var g2 = bufImg.createGraphics();
         g2.setColor(new Color(0x303030));
-        g2.fill(new Rectangle(0, 0, 800, 600));
+        g2.fill(new Rectangle(0, 0, width, height));
         for (int row = 0; row < 15; row++) {
             for (int col = 0; col < 20; col++) {
-                var rec = new Rectangle(col * 40 + 2, row * 40 + 2, 36, 36);
+                var rec = new Rectangle(
+                        col * cellSize + 2,
+                        row * cellSize + 2,
+                        cellSize - 4,
+                        cellSize - 4);
                 switch (data[row][col]) {
                     case CELL_EMPTY -> g2.setColor(Color.BLACK);
                     case CELL_BODY -> g2.setColor(Color.WHITE);
@@ -52,13 +73,20 @@ public class Board extends Canvas {
                 g2.fill(rec);
             }
         }
-        if (dead) {
-            g2.setColor(Color.WHITE);
-            g2.drawString("You dead. Press (R) to play again.", 0, 50);
-        }
+        g.drawImage(bufImg, 0, 0, null);
+    }
+
+    @Override
+    public void paint(Graphics g) {
+        super.paint(g);
+        paintComponent(g);
     }
 
     public void showDead(boolean dead) {
         this.dead = dead;
+        SwingUtilities.invokeLater(() -> {
+            deadLabel.setVisible(dead);
+            revalidate();
+        });
     }
 }

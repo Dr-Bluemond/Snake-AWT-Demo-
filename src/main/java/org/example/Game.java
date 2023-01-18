@@ -8,6 +8,8 @@ public class Game {
 
     int rowc;
     int colc;
+
+    int interval;
     public Snake snake;
     public Point food;
 
@@ -17,10 +19,11 @@ public class Game {
 
     Thread thread;
 
-    public Game(Board board, int rowc, int colc) {
+    public Game(Board board, int rowc, int colc, int interval) {
         this.board = board;
         this.rowc = rowc;
         this.colc = colc;
+        this.interval = interval;
         board.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
@@ -111,7 +114,7 @@ public class Game {
             while (running) {
                 try {
                     synchronized (Game.this) {
-                        Game.this.wait(100);
+                        Game.this.wait(interval);
                     }
                 } catch (InterruptedException e) {
                     running = false;
@@ -132,6 +135,7 @@ public class Game {
                 paintGameOnBoard();
             }
         });
+        thread.setName("GameThread");
         thread.start();
     }
 }
