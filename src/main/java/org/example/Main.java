@@ -24,7 +24,8 @@ public class Main {
         mainFrame.setResizable(false);
         mainFrame.setVisible(true);
         board.requestFocus();
-        Game game = new Game(board, ROW_COUNT, COL_COUNT, INTERVAL);
+        GameThread game = new GameThread(board, ROW_COUNT, COL_COUNT, INTERVAL);
         game.start();
+        game.gameStart();
     }
 }

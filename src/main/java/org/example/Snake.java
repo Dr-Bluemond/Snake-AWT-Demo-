@@ -7,9 +7,9 @@ public class Snake {
     int rowc;
     int colc;
     LinkedList<Point> body;
-    Game game;
+    GameThread game;
 
-    public Snake(Game game, int rowc, int colc) {
+    public Snake(GameThread game, int rowc, int colc) {
         this.game = game;
         this.rowc = rowc;
         this.colc = colc;

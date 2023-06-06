@@ -1,6 +1,5 @@
 package org.example;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
@@ -22,7 +21,7 @@ public class Board extends Container {
     int height;
 
     BufferedImage bufImg;
-    Cell[][] data; // each cell's size is 40*40
+    Cell[][] data;
 
     boolean dead;
     Label deadLabel;
@@ -40,7 +39,7 @@ public class Board extends Container {
         setPreferredSize(new Dimension(width, height));
         clear();
         this.setLayout(new BorderLayout());
-        deadLabel = new Label("You are dead! Press R to restart.");
+        deadLabel = new Label("You dead! Press R to restart.");
         deadLabel.setFont(new Font("Arial", Font.BOLD, 20));
         this.add(deadLabel, BorderLayout.NORTH);
     }
@@ -84,9 +83,7 @@ public class Board extends Container {
 
     public void showDead(boolean dead) {
         this.dead = dead;
-        SwingUtilities.invokeLater(() -> {
-            deadLabel.setVisible(dead);
-            revalidate();
-        });
+        deadLabel.setVisible(dead);
+        revalidate();
     }
 }
