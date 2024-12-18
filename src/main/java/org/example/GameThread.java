@@ -19,7 +19,7 @@ public class GameThread extends Thread {
     public Direction direction;
     public Board board;
 
-    private final BlockingQueue<Integer> event_queue = new LinkedBlockingQueue<>();
+    private final BlockingQueue<Integer> eventQueue = new LinkedBlockingQueue<>();
 
     public static final int EVENT_LEFT = 0;
     public static final int EVENT_RIGHT = 1;
@@ -37,18 +37,18 @@ public class GameThread extends Thread {
             @Override
             public void keyPressed(KeyEvent e) {
                 switch (e.getKeyCode()) {
-                    case KeyEvent.VK_LEFT -> event_queue.offer(EVENT_LEFT);
-                    case KeyEvent.VK_RIGHT -> event_queue.offer(EVENT_RIGHT);
-                    case KeyEvent.VK_UP -> event_queue.offer(EVENT_UP);
-                    case KeyEvent.VK_DOWN -> event_queue.offer(EVENT_DOWN);
-                    case KeyEvent.VK_R -> event_queue.offer(EVENT_RESTART);
+                    case KeyEvent.VK_LEFT -> eventQueue.offer(EVENT_LEFT);
+                    case KeyEvent.VK_RIGHT -> eventQueue.offer(EVENT_RIGHT);
+                    case KeyEvent.VK_UP -> eventQueue.offer(EVENT_UP);
+                    case KeyEvent.VK_DOWN -> eventQueue.offer(EVENT_DOWN);
+                    case KeyEvent.VK_R -> eventQueue.offer(EVENT_RESTART);
                 }
             }
         });
     }
 
     public void gameStart() {
-        event_queue.offer(EVENT_RESTART);
+        eventQueue.offer(EVENT_RESTART);
     }
 
     public void run() {
@@ -56,7 +56,7 @@ public class GameThread extends Thread {
         while (true) {
             try {
                 if (!running) {
-                    Integer event = event_queue.take();
+                    Integer event = eventQueue.take();
                     if (event == EVENT_RESTART) {
                         running = true;
                         init();
@@ -67,7 +67,7 @@ public class GameThread extends Thread {
                 long lastMove = System.currentTimeMillis();
                 long now;
                 while ((now = System.currentTimeMillis()) - lastMove < interval) {
-                    Integer event = event_queue.poll(interval - (now - lastMove), TimeUnit.MILLISECONDS);
+                    Integer event = eventQueue.poll(interval - (now - lastMove), TimeUnit.MILLISECONDS);
                     if (event != null) {
                         switch (event) {
                             case EVENT_LEFT -> {
