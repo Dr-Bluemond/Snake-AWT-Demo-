@@ -1,5 +1,5 @@
 # AWT DEMO
 
-随便用Java AWT的Canvas写一个贪吃蛇玩一玩
+随便用Java AWT写一个贪吃蛇玩一玩，不使用Swing。
 
-仅在Mac下测试过
+在Mac和Windows下测试过。
